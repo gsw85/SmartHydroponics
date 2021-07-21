@@ -31,9 +31,7 @@ Smart Hydroponic Farm is a smart monitoring system with AI capabilities that are
 [ThingsBoard](https://thingsboard.io/) is an open-source IoT platform for data collection, processing, visualization, and device management. All sensors values and AI model prediction result will be send to the Thingsboard dashboard. [Installation instruction.](https://thingsboard.io/docs/user-guide/install/installation-options/)
 
 ## Schematic Diagram
-![alt text][sc]
-
-[sc]: /Assets/Schematic.PNG "System Schematic Diagram"
+![alt text](/Assets/Schematic.PNG "System Schematic Diagram")
 
 ## Step to Run on Raspberry Pi
 ### 1. Requirements
