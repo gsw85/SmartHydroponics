@@ -1,0 +1,9 @@
+# train and val data
+train: ../yolov5/dataset/train/images
+val: ../yolov5/dataset/valid/images
+
+# number of classes
+nc: 4
+
+# class names
+names: ['Botrytis', 'DownyMildew', 'IronDeficiency', 'PowderyMildew']

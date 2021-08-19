@@ -5,7 +5,8 @@ import random
 import time
 import json
 
-sys.path.insert(0, './yolov5')
+sys.path.insert(0, './plant_yolov5_pi')
+sys.path.insert(0, './pest_yolov5_pi')
 
 from intensity import get_light_intensity
 from ads import Analog
@@ -16,15 +17,17 @@ from control import Control
 from file import File
 from timestamp import get_timestamp
 from send_data import ThingsboardAPI
-from yolov5 import detect
-from classification import detect2
+from plant_yolov5_pi import detect as disease
+from pest_yolov5_pi import detect as pest
+from crop_growth.inference import CropGrowth
 from variable import * 
 
 
 a = Analog()
-# aht15 = Aht15()
-light = Control(23)
+aht15 = Aht15()
+# light = Control(23)
 api = ThingsboardAPI()
+growth = CropGrowth()
 
 sensor_data = {'temperature': 0, 'humidity': 0, 'water_pH': 0, 'water_temp': 0, 'light_intensity': 0, 'ec': 0, 'ec_gain': 0, 'water_level':"", 'water_flow': 0}
 # control = {'light_enabled': False, 'ac_enabled': False, 'water_enabled': False, 'nutrient_enabled_a': False, 'nutrient_enabled_b': False, 'ph_down_pump_enabled': False}
@@ -59,10 +62,10 @@ def send_telementry(client):
             print("sending data to thingsboard")
             documents = File.read_file()
 
-            # humidity = aht15.get_humid()
-            # temperature = aht15.get_temp()
-            humidity = random.randrange(45, 65)	
-            temperature = random.randrange(26, 32)	
+            humidity = aht15.get_humid()
+            temperature = aht15.get_temp()
+            # humidity = random.randrange(45, 65)	
+            # temperature = random.randrange(26, 32)	
             water_pH = a.get_ph()
             water_temp = a.read_temp()
             ec_gain = a.get_ec_gain() 
@@ -74,8 +77,9 @@ def send_telementry(client):
             
             
             if((get_timestamp() - documents['detection']['timestamp']) > 600):
-                detect.perform_detection()
-                detect2.classify()
+                disease.perform_disease_detection()
+                pest.perform_pest_detection()
+                growth.perform_plant_growth_prediction()
                 api.send_image()
                 documents['detection']['timestamp'] = get_timestamp()
 
@@ -144,17 +148,18 @@ def send_telementry(client):
                 documents['timer']['light_intensity']['initial'][0] = get_timestamp()
                 documents['timer']['light_intensity']['timer_status'][0] = 1
                 light_button['light_enabled'] = True
-                light.on()
+                # light.on()
                 api.send_attributes(light_button)  
             else:
                 if(documents['timer']['light_intensity']['timer_status'][0] == 1):
                     if(get_timestamp() - documents['timer']['light_intensity']['initial'][0] > 1800):
                         light_button['light_enabled'] = False
                         documents['timer']['light_intensity']['timer_status'][0] = 0
-                        light.off()
+                        # light.off()
                         api.send_attributes(light_button)  
                 else:
-                        light.off()
+                        # light.off()
+                        print("light off")
             
             if (documents['data']['water_temp'][0] > 27) and (documents['data']['water_temp'][1] > 27) and (documents['data']['water_temp'][2] > 27):
                 ac_button['ac_enabled'] = True

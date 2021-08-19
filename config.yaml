@@ -1,7 +1,3 @@
-thingsboard:
-  ACCESS_TOKEN: syeLgLufPBBLAiRT5cxo
-  THINGSBOARD_HOST: 192.168.100.10
-
 calibration:
   ec:
     c:
@@ -20,9 +16,11 @@ calibration:
     m:
     - -6.09651205674657
     x:
-    - 2.0220617084261607
+    - 1.3140401013214515
     - 1.1740358287301247
     y:
     - 4.01
     - 9.18
-
+thingsboard:
+  ACCESS_TOKEN: syeLgLufPBBLAiRT5cxo
+  THINGSBOARD_HOST: 192.168.91.50

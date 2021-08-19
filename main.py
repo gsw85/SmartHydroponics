@@ -30,9 +30,11 @@ reset_calibrate_button = {'reset_calibrate_button': False}
 message = {'pH_message': '', 'ec_message': '', 'ph_calibrate_indicator': False, 'ec_calibrate_indicator': False}
 
 #light = Control(23)
-#ac = Control(18)
+ac = Control(14)
 nutrient = Control(24)
 water_pump = Control(18)
+nutrient_b = Control(25)
+ph_down_pump = Control(23)
 
 def timer(attr = None,control = None):
     time.sleep(2.5)
@@ -58,10 +60,10 @@ def set_ac_value (params):
     ac_button['ac_enabled'] = params
     if ac_button['ac_enabled'] == True:
         print("AC status : ON")
-        #ac.on()
+        ac.on()
     else:
         print("AC status : OFF")
-        #ac.off()
+        ac.off()
 
 def set_water_pump_value (params):
     water_pump_button['water_enabled'] = params
@@ -94,9 +96,11 @@ def set_nutrient_pump_b_value (params):
     if nutrient_pump_b_button['nutrient_enabled_b'] == True:
         print("Nutrient pump B status : ON") 
         # nutrient_pump_b_button['nutrient_enabled_b'] = False
-        t = threading.Thread(target = timer, args = ({'nutrient_enabled_b': False},))
+        nutrient_b.on()
+        t = threading.Thread(target = timer, args = ({'nutrient_enabled_b': False}, nutrient_b, ))
         t.start()
     else:
+        nutrient_b.off()
         print("Nutrient pump B status : OFF")      
 
 def set_ph_down_pump_value (params):
@@ -106,11 +110,13 @@ def set_ph_down_pump_value (params):
     ph_down_pump_button['ph_down_enabled'] = params
     if ph_down_pump_button['ph_down_enabled'] == True:
         print("Nutrient pump B status : ON") 
-        t = threading.Thread(target = timer, args = ({'ph_down_enabled': False},))
+        ph_down_pump.on()
+        t = threading.Thread(target = timer, args = ({'ph_down_enabled': False}, ph_down_pump,))
         t.start()
 
     else:
-        print("Nutrient pump B status : OFF")    
+        print("Nutrient pump B status : OFF")  
+        ph_down_pump.off()  
 
 
 def set_calibrate_ph (params):
