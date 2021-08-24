@@ -28,6 +28,7 @@ Smart Hydroponic Farm is a smart monitoring system with AI capabilities that are
 * [DC-DC voltage regulator adjustable step down module](https://shopee.com.my/LM2596-DC-DC-Voltage-Regulator-Adjustable-Step-Down-Module-w-Display-i.33287405.2148334760)
 
 ## Software
+### Thingsboard
 [ThingsBoard](https://thingsboard.io/) is an open-source IoT platform for data collection, processing, visualization, and device management. All sensors values and AI model prediction result will be send to the Thingsboard dashboard. [Installation instruction.](https://thingsboard.io/docs/user-guide/install/installation-options/)
 
 ## Schematic Diagram
@@ -38,15 +39,19 @@ Smart Hydroponic Farm is a smart monitoring system with AI capabilities that are
 ## Step to Run on Raspberry Pi
 ### 1. Requirements
 ```
-$ git clone https://github.com/SkymindCNS/SmartHydroponics 
+$ git clone https://github.com/SkymindCNS/SmartHydroponics/tree/test-push
 $ pip install -r requirements.txt
+$ gdown https://drive.google.com/file/d/1mJsf1OjjnKJ24vBGicuTfT5N0jZBHCvn/view?usp=sharing -O crop_growth/model_final.pth
+$ gdown https://drive.google.com/file/d/1Pq-0WogvNwxCh-EMyLkqIr2_3NFvjfaV/view?usp=sharing -O pest_yolov5_pi/best.pt
+$ gdown https://drive.google.com/file/d/1FQZKmES3XnjpsPyMxGAG3iyhdRokQY1l/view?usp=sharing -O plant_yolov5_pi/best.pt
+
 ```
 ### 2. Change Configuration File
 Open config.yaml file and edit access token and ip address information.
 ```
 thingsboard:
-  ACCESS_TOKEN: DEVICE_ID
-  THINGSBOARD_HOST: IP_ADDRESS
+  ACCESS_TOKEN: THINGSBOARD_DEVICE_ID
+  THINGSBOARD_HOST: THINGSBOARD_IP_ADDRESS
 ```
 The below image showed steps on how to get device id at Thingsboard
 

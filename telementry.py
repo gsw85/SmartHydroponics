@@ -77,9 +77,13 @@ def send_telementry(client):
             
             
             if((get_timestamp() - documents['detection']['timestamp']) > 600):
-                disease.perform_disease_detection()
-                pest.perform_pest_detection()
-                growth.perform_plant_growth_prediction()
+                plant_disease_info = disease.perform_disease_detection()
+                pest_info = pest.perform_pest_detection()
+                print('Prediction result', plant_disease_info, pest_info)
+                growth_info = growth.perform_plant_growth_prediction()
+                api.send_attributes({'growth_info' : growth_info})
+                api.send_attributes({'plant_disease_info': plant_disease_info})
+                api.send_attributes({'pest_info': pest_info})
                 api.send_image()
                 documents['detection']['timestamp'] = get_timestamp()
 

@@ -13,7 +13,6 @@ from detectron2 import model_zoo
 from detectron2.engine import DefaultPredictor
 from detectron2.utils.visualizer import Visualizer
 
-
 path = pathlib.Path(__file__).parent.resolve()
 
 class CropGrowth:
@@ -38,6 +37,8 @@ class CropGrowth:
         pred_masks = outputs["instances"].pred_masks.to("cpu").numpy()
         categories = outputs["instances"].to("cpu").pred_classes.numpy()
         predicted_boxes = outputs["instances"].pred_boxes.tensor.to("cpu").numpy()
+        scores = outputs["instances"].scores.to("cpu").numpy()
+       
 
         masks = []
         for x in range(len(pred_masks)):
@@ -82,3 +83,18 @@ class CropGrowth:
         cv2.imwrite(str(path) + '/seg_image.jpg', v.get_image()[:, :, ::-1])
 
         print("Image saved at" + str(path) + '/seg_image.jpg')
+
+        inf = ''
+        for x in range(len(temp_masks)):
+            if(categories[x] == 0):
+                label = 'Lettuce'
+            if  x == 0 :
+
+                inf = label + "," + str(area_pixels[x]) + "," + str(scores[x])
+            else:
+                inf = inf + ':' + label + "," + str(area_pixels[x]) + "," + str(scores[x])
+
+        return inf
+
+
+

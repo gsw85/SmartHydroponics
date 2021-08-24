@@ -114,6 +114,7 @@ def run(weights= PROJECT_ROOT + '/best.pt',  # model.pt path(s)
         model(torch.zeros(1, 3, imgsz, imgsz).to(device).type_as(next(model.parameters())))  # run once
     t0 = time.time()
     for path, img, im0s, vid_cap in dataset:
+      
         if pt:
             img = torch.from_numpy(img).to(device)
             img = img.half() if half else img.float()  # uint8 to fp16/32
@@ -141,6 +142,7 @@ def run(weights= PROJECT_ROOT + '/best.pt',  # model.pt path(s)
 
         # Process predictions
         for i, det in enumerate(pred):  # detections per image
+           
             if webcam:  # batch_size >= 1
                 p, s, im0, frame = path[i], f'{i}: ', im0s[i].copy(), dataset.count
             else:
@@ -162,6 +164,7 @@ def run(weights= PROJECT_ROOT + '/best.pt',  # model.pt path(s)
                     s += f"{n} {names[int(c)]}{'s' * (n > 1)}, "  # add to string
 
                 # Write results
+                x = 0
                 for *xyxy, conf, cls in reversed(det):
                     if save_txt:  # Write to file
                         xywh = (xyxy2xywh(torch.tensor(xyxy).view(1, 4)) / gn).view(-1).tolist()  # normalized xywh
@@ -176,8 +179,19 @@ def run(weights= PROJECT_ROOT + '/best.pt',  # model.pt path(s)
                         if save_crop:
                             save_one_box(xyxy, imc, file=save_dir / 'crops' / names[c] / f'{p.stem}.jpg', BGR=True)
 
-            # Print time (inference + NMS)
-            print(f'{s}Done. ({t2 - t1:.3f}s)')
+                        # This is to print the labels in string in one line     
+                        
+                    if(x==0):
+                        inf = names[c] + "," + f'{conf:.2f}'
+                    else:
+                        inf = inf + ":" + names[c] + "," + f'{conf:.2f}'
+                    
+                    x = x + 1
+                    
+                # print(inf)
+
+            # # Print time (inference + NMS)
+            # print(f'{s}Done. ({t2 - t1:.3f}s)')
 
             # Stream results
             if view_img:
@@ -205,13 +219,13 @@ def run(weights= PROJECT_ROOT + '/best.pt',  # model.pt path(s)
 
     if save_txt or save_img:
         s = f"\n{len(list(save_dir.glob('labels/*.txt')))} labels saved to {save_dir / 'labels'}" if save_txt else ''
-        print(f"Results saved to {colorstr('bold', save_dir)}{s}")
+        # print(f"Results saved to {colorstr('bold', save_dir)}{s}")
 
     if update:
         strip_optimizer(weights)  # update model (to fix SourceChangeWarning)
 
-    print(f'Done. ({time.time() - t0:.3f}s)')
-
+    # print(f'Done. ({time.time() - t0:.3f}s)')
+    return inf
 
 def parse_opt():
     parser = argparse.ArgumentParser()
@@ -245,7 +259,9 @@ def parse_opt():
 
 def perform_pest_detection():
     opt = parse_opt()
-    print(colorstr('detect: ') + ', '.join(f'{k}={v}' for k, v in vars(opt).items()))
+    # print(colorstr('detect: ') + ', '.join(f'{k}={v}' for k, v in vars(opt).items()))
     # check_requirements(exclude=('tensorboard', 'thop'))
-    run(**vars(opt))
+    pest_detection = run(**vars(opt))
+    return pest_detection
 
+print(perform_pest_detection())

@@ -30,6 +30,7 @@ class ThingsboardAPI:
         try:
             requests.post(url, json = data)
         except:
+            print('Fail send attribute')
             stop_thread()
             pass
 
@@ -45,17 +46,24 @@ class ThingsboardAPI:
             pass
 
     def send_image(self):
-
-        with open("yolov5/runs/detect/exp/imgpred4.jpg", "rb") as img_file:
+        
+        with open("plant_yolov5_pi/runs/detect/exp/disease_detection.jpg", "rb") as img_file:
             my_string_64 = base64.b64encode(img_file.read())
 
         my_string = my_string_64.decode('utf-8')
 
-        self.send_attributes({'prediction_image': my_string})
+        self.send_attributes({'disease_prediction_image': my_string})
 
-        with open("classification/cfm.jpg", "rb") as img_file:
+        with open("pest_yolov5_pi/runs/detect/exp/pest_detection.jpg", "rb") as img_file:
             my_string_64 = base64.b64encode(img_file.read())
 
         my_string = my_string_64.decode('utf-8')
 
-        self.send_attributes({'classification_image': my_string})
+        self.send_attributes({'pest_prediction_image': my_string})
+
+        with open("crop_growth/seg_image.jpg", "rb") as img_file:
+            my_string_64 = base64.b64encode(img_file.read())
+
+        my_string = my_string_64.decode('utf-8')
+
+        self.send_attributes({'size_prediction_image': my_string})        

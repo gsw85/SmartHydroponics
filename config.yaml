@@ -23,4 +23,4 @@ calibration:
     - 9.18
 thingsboard:
   ACCESS_TOKEN: syeLgLufPBBLAiRT5cxo
-  THINGSBOARD_HOST: 192.168.91.50
+  THINGSBOARD_HOST: 192.168.203.50
